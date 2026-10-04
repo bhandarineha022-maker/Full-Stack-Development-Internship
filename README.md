@@ -1,100 +1,188 @@
-# AuroraCart — Full-Stack E-Commerce Web Application
+# Blog Space – Blogging & Comments Platform
 
-AuroraCart is a complete Flask e-commerce project built around the requirements in the supplied reference:
-- Product catalog, add-to-cart and checkout
-- User login and role-based access (Admin/User)
-- Backend REST APIs for product and order management
-- SQL database integration through SQLAlchemy
-- Order tracking with status updates
-- Responsive, animated and unique visual design
+Blog Space is a full-stack blogging platform built with Flask, SQLite, HTML, CSS and JavaScript.
 
-## 1. Requirements
-- Python 3.10 or newer
-- VS Code or another editor
-- Internet only during package installation if packages are not already cached
-- Optional: MySQL 8+ if you want to switch from the included SQLite development database
+## Features
 
-## 2. Windows setup
+- User registration and login
+- Password hashing
+- Session-based authentication
+- Create, read, edit and delete blog posts
+- Users can edit/delete only their own posts
+- Comments on blog posts
+- Like and dislike reactions (one reaction per user per post)
+- 1–5 star post ratings (one rating per user per post)
+- Optional post image upload (PNG/JPG/JPEG/GIF/WEBP, up to 5 MB)
+- Users can delete only their own comments
+- RESTful API endpoints for posts and comments
+- SQLite database integration
+- Responsive modern UI
+- Search/filter posts on the home page
+- Flash messages for actions and validation
+- No external database or API key is required
 
-Open PowerShell inside this project folder:
+## Technology
+
+- Frontend: HTML5, CSS3, JavaScript
+- Backend: Python + Flask
+- Database: SQLite
+- Authentication: Flask sessions + Werkzeug password hashing
+- API: REST-style JSON endpoints
+
+## Windows Setup
+
+### 1. Open PowerShell in this folder
+
+Example:
+
+```powershell
+cd "C:\Users\YOUR_NAME\Downloads\Inkora_Blogging_Platform"
+```
+
+### 2. Create a virtual environment
+
+```powershell
+py -m venv .venv
+```
+
+If `py` does not work:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python run.py
 ```
 
-Then open:
-http://127.0.0.1:5000
+### 3. Activate it
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
 If PowerShell blocks activation, run:
+
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
-## 3. Demo accounts
-User:
-- Email: user@auroracart.local
-- Password: user123
+### 4. Install packages
 
-Admin:
-- Email: admin@auroracart.local
-- Password: admin123
-
-## 4. MySQL option
-The project works immediately with SQLite so you can test it without installing MySQL. It also supports MySQL.
-
-1. Create a database:
-```sql
-CREATE DATABASE auroracart;
-```
-
-2. Copy `.env.example` to `.env`.
-
-3. Change:
-```env
-DATABASE_URL=mysql+pymysql://root:YOUR_PASSWORD@localhost/auroracart
-```
-
-4. Restart:
 ```powershell
-python run.py
+python -m pip install -r requirements.txt
 ```
 
-SQLAlchemy will create the required tables automatically.
+### 5. Start the website
 
-## 5. Main pages
-- `/` — storefront/product catalog
-- `/shop/cart` — shopping cart
-- `/shop/checkout` — checkout
-- `/shop/orders` — customer order history
-- `/admin/` — admin dashboard
-- `/login` and `/register` — authentication
-- `/api/products` — product JSON API
-- `/api/orders` — order JSON API (login required)
-- `/api/search?q=keyboard` — product search API
+```powershell
+python app.py
+```
 
-## 6. What the admin can do
-- Add products
-- View products and stock
-- View all orders
-- Change order status: Placed → Packed → Shipped → Out for Delivery → Delivered
-- Cancel orders
-- Protect admin features using role-based access
+You should see Flask running on:
 
-## 7. Notes for your college demonstration
-The seeded products and accounts are already included. You can demonstrate:
-1. Register a new user.
-2. Browse products and filter by category.
-3. Add multiple products to cart.
-4. Checkout with a shipping address.
-5. Open My Orders and show the tracking timeline.
-6. Log out and sign in as admin.
-7. Add a product from Admin.
-8. Change an order's status.
-9. Open `/api/products` to demonstrate the backend API.
+`http://127.0.0.1:5000`
 
-The design intentionally uses a warm off-white background, deep ink navy, coral-pink and saffron yellow rather than a common blue/purple e-commerce template.
+Open that address in Chrome or Edge.
+
+The SQLite database is automatically created at:
+
+`instance/inkora.db`
+
+## How to test
+
+1. Open the website.
+2. Click Register.
+3. Create a user account.
+4. Log in.
+5. Click Write a Post.
+6. Create a blog post.
+7. Open the post.
+8. Add a comment.
+9. Edit or delete your own post.
+10. Log out and register another account to test ownership restrictions.
+
+## REST API
+
+### Public
+
+- `GET /api/health`
+- `GET /api/posts`
+- `GET /api/posts/<id>`
+
+### Authentication required
+
+- `POST /api/posts`
+- `PUT /api/posts/<id>`
+- `DELETE /api/posts/<id>`
+- `POST /api/posts/<id>/comments`
+- `DELETE /api/comments/<id>`
+
+The API uses JSON for request/response data.
+
+Example create-post JSON:
+
+```json
+{
+  "title": "My First Inkora Post",
+  "content": "This is my first post."
+}
+```
+
+## Project structure
+
+```text
+Inkora_Blogging_Platform/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── instance/
+│   └── inkora.db          # created automatically
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── auth.html
+│   ├── editor.html
+│   ├── post.html
+│   └── 404.html
+│
+└── static/
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── app.js
+```
+
+## Presentation explanation
+
+**Frontend:** The templates create the pages and CSS gives the website its cream, peach and coral visual theme.
+
+**Backend:** Flask handles routes, authentication, blog CRUD operations, comments and REST API requests.
+
+**Database:** SQLite stores users, posts and comments. Foreign keys connect posts to their authors and comments to both posts and authors.
+
+**Authentication:** A user registers with an email/password. The password is stored as a secure hash. After login, Flask stores the user's ID in a session.
+
+**REST API:** JSON endpoints allow a frontend or API client to read and modify posts/comments without directly accessing the database.
+
+**Security/ownership:** A logged-in user can edit or delete only content they created.
+
+
+## New interaction features
+
+### Like / Dislike
+A logged-in user can like or dislike a post. Clicking the same reaction again removes it. Switching from Like to Dislike changes the reaction instead of creating duplicates.
+
+### Rating
+A logged-in user can rate a post from 1 to 5 stars. The current average rating and number of ratings are shown on the post.
+
+### Optional image
+When creating or editing a post, an image can optionally be selected from the computer. Supported formats are PNG, JPG, JPEG, GIF and WEBP, with a 5 MB limit.
+
+Uploaded images are stored in `static/uploads/`.
+
+### Important
+If you used an older copy of this project before these features were added, the application automatically adds the new `image_filename` column to the existing posts table. The new reaction and rating tables are created automatically.
+
+## Visual design
+
+The **Blog Space** interface uses the requested cream, peach/coral, green and dark-brown colour family while using an independently designed editorial layout. The navigation, hero composition, organic paper-like cards, post grid, typography hierarchy and engagement sections are intentionally different from the reference design.
